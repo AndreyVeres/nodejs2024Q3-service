@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { v4 as uuid } from 'uuid';
 
 export class UserEntity {
-  id = uuid();
+  readonly id = uuid();
 
   @IsNotEmpty()
   @IsString()

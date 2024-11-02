@@ -3,18 +3,19 @@ import { db } from 'src/db';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { toPromise } from 'src/shared/utils/toPromise';
 
-const pr = <T>(data: T) =>
-  new Promise<T>((res) =>
-    setTimeout(() => {
-      res(data);
-    }, 444),
-  );
+// const pr = <T>(data: T) =>
+//   new Promise<T>((res) =>
+//     setTimeout(() => {
+//       res(data);
+//     }, 444),
+//   );
 
 @Injectable()
 export class UserService {
   getAll(): Promise<UserEntity[]> {
-    return pr<UserEntity[]>(db.users);
+    return toPromise<UserEntity[]>(db.users);
   }
 
   async create(userData: CreateUserDto) {
@@ -42,11 +43,11 @@ export class UserService {
   }
 
   async findByLogin(login: string) {
-    return await pr<UserEntity | null>(db.users.find((user) => user.login === login));
+    return await toPromise<UserEntity | null>(db.users.find((user) => user.login === login));
   }
 
   async getById(userId: string) {
-    const user = await pr<UserEntity | null>(db.users.find((user) => user.id === userId));
+    const user = await toPromise<UserEntity | null>(db.users.find((user) => user.id === userId));
 
     if (!user) throw new NotFoundException('User not found');
     return user;
