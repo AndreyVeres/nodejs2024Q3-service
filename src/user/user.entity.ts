@@ -13,6 +13,6 @@ export class UserEntity {
   password: string;
 
   version: number = 1;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: number = new Date().getTime();
+  updatedAt: number = new Date().getTime();
 }
