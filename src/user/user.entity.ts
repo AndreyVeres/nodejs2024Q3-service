@@ -12,7 +12,7 @@ export class UserEntity {
   @IsString()
   password: string;
 
-  version: number = 1;
+  version = 1;
   createdAt: number = new Date().getTime();
   updatedAt: number = new Date().getTime();
 }

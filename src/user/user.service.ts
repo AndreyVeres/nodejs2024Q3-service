@@ -5,13 +5,6 @@ import { UserEntity } from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { toPromise } from 'src/shared/utils/toPromise';
 
-// const pr = <T>(data: T) =>
-//   new Promise<T>((res) =>
-//     setTimeout(() => {
-//       res(data);
-//     }, 444),
-//   );
-
 @Injectable()
 export class UserService {
   getAll(): Promise<UserEntity[]> {

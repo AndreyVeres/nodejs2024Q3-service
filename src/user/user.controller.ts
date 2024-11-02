@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserEntity } from './user.entity';
 import { ValidationPipe } from 'src/shared/pipes/validation.pipe';
-import { StatusCodes } from 'http-status-codes';
 
 @Controller('user')
 export class UserController {
