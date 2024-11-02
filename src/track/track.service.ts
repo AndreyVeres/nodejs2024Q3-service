@@ -49,4 +49,19 @@ export class TrackService {
 
     db.tracks = db.tracks.filter((track) => track.id !== id);
   }
+
+  async removeArtistFromTracks(id: string) {
+    return await toPromise(
+      (db.tracks = db.tracks.map((track) => {
+        if (track.artistId === id) {
+          return {
+            ...track,
+            artistId: null,
+          };
+        }
+
+        return track;
+      })),
+    );
+  }
 }
