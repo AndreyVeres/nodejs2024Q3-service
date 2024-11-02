@@ -4,10 +4,15 @@ import { ValidationPipe } from 'src/shared/pipes/validation.pipe';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { TrackService } from 'src/track/track.service';
+import { AlbumService } from 'src/album/album.service';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private artistService: ArtistService, private trackService: TrackService) {}
+  constructor(
+    private artistService: ArtistService,
+    private trackService: TrackService,
+    private albumService: AlbumService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -36,6 +41,6 @@ export class ArtistController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string) {
-    await Promise.all([this.artistService.delete(id), this.trackService.removeArtistFromTracks(id)]);
+    await Promise.all([this.artistService.delete(id), this.trackService.removeArtistFromTracks(id) , this.albumService.removeArtistFromAlbums(id)]);
   }
 }

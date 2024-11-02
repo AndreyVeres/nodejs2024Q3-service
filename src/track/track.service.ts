@@ -64,4 +64,19 @@ export class TrackService {
       })),
     );
   }
+
+  async removeAlbumFromTracks(id: string) {
+    return await toPromise(
+      (db.tracks = db.tracks.map((track) => {
+        if (track.albumId === id) {
+          return {
+            ...track,
+            albumId: null,
+          };
+        }
+
+        return track;
+      })),
+    );
+  }
 }

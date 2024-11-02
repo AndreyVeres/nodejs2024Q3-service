@@ -12,5 +12,5 @@ export class UpdateTrackDto {
   readonly albumId: string | null;
 
   @IsNumber()
-  readonly duration: string | null;
+  readonly duration: string;
 }
