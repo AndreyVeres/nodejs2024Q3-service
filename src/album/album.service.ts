@@ -46,6 +46,7 @@ export class AlbumService {
     if (!album) throw new NotFoundException('Album not found');
 
     db.albums = db.albums.filter((album) => album.id !== id);
+    db.favs.albums = db.favs.albums.filter((albumId) => albumId !== id);
   }
 
   async removeArtistFromAlbums(id: string) {
@@ -61,5 +62,9 @@ export class AlbumService {
         return album;
       })),
     );
+  }
+
+  async checkAlbumIsExist(id: string) {
+    return await toPromise(!!db.albums.find((album) => album.id === id));
   }
 }

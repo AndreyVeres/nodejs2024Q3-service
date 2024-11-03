@@ -48,6 +48,7 @@ export class TrackService {
     if (!track) throw new NotFoundException('track not found');
 
     db.tracks = db.tracks.filter((track) => track.id !== id);
+    db.favs.tracks = db.favs.tracks.filter((trackId) => trackId !== id);
   }
 
   async removeArtistFromTracks(id: string) {
@@ -78,5 +79,9 @@ export class TrackService {
         return track;
       })),
     );
+  }
+
+  async checkTrackIsExist(id: string) {
+    return await toPromise(!!db.tracks.find((track) => track.id === id));
   }
 }

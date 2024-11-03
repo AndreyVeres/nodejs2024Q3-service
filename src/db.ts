@@ -1,5 +1,6 @@
 import { AlbumEntity } from './album/album.entity';
 import { ArtistEntity } from './artist/artist.entity';
+import { FavoriteEntity } from './favorites/favorites.entity';
 import { TrackEntity } from './track/track.entity';
 import { UserEntity } from './user/user.entity';
 
@@ -8,6 +9,7 @@ interface DB {
   tracks: TrackEntity[];
   artists: ArtistEntity[];
   albums: AlbumEntity[];
+  favs: FavoriteEntity;
 }
 export const db: DB = {
   users: [
@@ -46,4 +48,15 @@ export const db: DB = {
       artistId: null,
     },
   ],
+  favs: {
+    // artists: [],
+    // albums: [],
+    // tracks: [],
+
+    artists: ['19144c24-6ca7-49d3-a0b6-fb7e5e921939'],
+    albums: ['19144c24-6ca7-49d3-a0b6-fb7e5e925939'],
+    tracks: ['19144c24-6ca7-49d3-a0b6-fb7e5e921932'],
+
+    // id: '19144c24-6ca7-49d3-a0b6-fb7e3e925939',
+  },
 };

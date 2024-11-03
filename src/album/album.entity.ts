@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
 export class AlbumEntity {
-  id: string = uuid();
+  readonly id: string = uuid();
   @IsNotEmpty()
   @IsString()
   name: string;

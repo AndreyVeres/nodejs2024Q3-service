@@ -14,7 +14,6 @@ export class ArtistService {
   async getById(id: string) {
     const artist = await toPromise(db.artists.find((artist) => artist.id === id));
 
-    console.log(db, id);
     if (!artist) throw new NotFoundException('Artist not found');
 
     return artist;
@@ -47,5 +46,10 @@ export class ArtistService {
     if (!artist) throw new NotFoundException('Artist not found');
 
     db.artists = db.artists.filter((artist) => artist.id !== id);
+    db.favs.artists = db.favs.artists.filter((artistId) => artistId !== id);
+  }
+
+  async checkArtistIsExist(id: string) {
+    return await toPromise(!!db.artists.find((artist) => artist.id === id));
   }
 }
