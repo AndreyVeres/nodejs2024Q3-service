@@ -4,22 +4,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { toPromise } from 'src/shared/utils/toPromise';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
+  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+
   getAll(): Promise<UserEntity[]> {
     return toPromise<UserEntity[]>(db.users);
   }
 
   async create(userData: CreateUserDto) {
-    const { login, password } = userData;
-    const user = new UserEntity();
-    user.login = login;
-    user.password = password;
-
-    db.users.push(user);
-
-    return this.buildUserRO(user);
+    const user = this.userRepository.create(userData);
+    return await this.userRepository.save(user);
   }
 
   async updatePassword(userId: string, dto: UpdatePasswordDto) {
@@ -29,7 +27,7 @@ export class UserService {
     if (user.password !== dto.oldPassword) throw new ForbiddenException('invalid old password');
 
     user.password = dto.newPassword;
-    user.updatedAt = new Date().getTime();
+    // user.updatedAt = new Date().getTime();
     user.version += 1;
 
     return this.buildUserRO(user);

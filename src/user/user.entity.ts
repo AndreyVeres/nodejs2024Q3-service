@@ -1,18 +1,24 @@
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-
+@Entity('user')
 export class UserEntity {
-  readonly id = uuid();
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
+  @Column()
   @IsNotEmpty()
   @IsString()
   login: string;
 
+  @Column()
   @IsNotEmpty()
   @IsString()
   password: string;
-
-  version = 1;
-  createdAt: number = new Date().getTime();
-  updatedAt: number = new Date().getTime();
+  @Column()
+  version: number = 1;
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: number;
+  @CreateDateColumn({ type: 'timestamp' })
+  updatedAt: number;
 }
