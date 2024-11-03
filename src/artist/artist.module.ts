@@ -5,8 +5,8 @@ import { TrackService } from 'src/track/track.service';
 import { AlbumService } from 'src/album/album.service';
 
 @Module({
-  imports: [],
   controllers: [ArtistController],
   providers: [ArtistService, TrackService, AlbumService],
+  exports: [ArtistService],
 })
 export class ArtistModule {}
