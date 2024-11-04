@@ -7,7 +7,7 @@ import { ValidationPipe } from 'src/shared/pipes/validation.pipe';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

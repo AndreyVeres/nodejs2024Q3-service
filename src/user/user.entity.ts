@@ -1,12 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   @IsNotEmpty()
   @IsString()
   login: string;
@@ -15,10 +14,19 @@ export class UserEntity {
   @IsNotEmpty()
   @IsString()
   password: string;
-  @Column()
-  version: number = 1;
-  @CreateDateColumn({ type: 'timestamp' })
+
+  @VersionColumn()
+  version: number;
+
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
+    transformer: { from: (a) => a.getTime(), to: (a) => a },
+  })
   createdAt: number;
-  @CreateDateColumn({ type: 'timestamp' })
+
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    transformer: { from: (a) => a.getTime(), to: (a) => a },
+  })
   updatedAt: number;
 }

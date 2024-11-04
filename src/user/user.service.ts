@@ -1,68 +1,65 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { db } from 'src/db';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { toPromise } from 'src/shared/utils/toPromise';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-  getAll(): Promise<UserEntity[]> {
-    return toPromise<UserEntity[]>(db.users);
+  async getAll(): Promise<UserEntity[]> {
+    const users = await this.userRepository.find();
+    return users.map(this.buildUserRO);
   }
 
-  async create(userData: CreateUserDto) {
-    const user = this.userRepository.create(userData);
-    return await this.userRepository.save(user);
+  async create(userData: CreateUserDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { login: userData.login } });
+    if (user) throw new BadRequestException('user already exist');
+
+    const newUser = this.userRepository.create(userData);
+    await this.userRepository.save(newUser);
+
+    delete newUser.password;
+    return newUser;
   }
 
-  async updatePassword(userId: string, dto: UpdatePasswordDto) {
-    const user = await this.getById(userId);
+  async updatePassword(userId: string, dto: UpdatePasswordDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) throw new NotFoundException('User not found');
     if (user.password !== dto.oldPassword) throw new ForbiddenException('invalid old password');
 
+    if (user.password === dto.newPassword) {
+      throw new BadRequestException('The new password must be different from the old one');
+    }
+
     user.password = dto.newPassword;
-    // user.updatedAt = new Date().getTime();
-    user.version += 1;
+    await this.userRepository.save(user);
+    return this.buildUserRO(user);
+  }
+
+  async findByLogin(login: string): Promise<UserEntity> {
+    return await this.userRepository.findOne({ where: { login } });
+  }
+
+  async getById(userId: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
 
     return this.buildUserRO(user);
   }
 
-  async findByLogin(login: string) {
-    return await toPromise<UserEntity | null>(db.users.find((user) => user.login === login));
-  }
-
-  async getById(userId: string) {
-    const user = await toPromise<UserEntity | null>(db.users.find((user) => user.id === userId));
-
+  async delete(userId: string): Promise<DeleteResult> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
+
+    return await this.userRepository.delete(user.id);
+  }
+
+  private buildUserRO(user: UserEntity): UserEntity {
+    delete user.password;
     return user;
-  }
-
-  async delete(userId: string) {
-    const user = await this.getById(userId);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    db.users = db.users.filter((user) => user.id !== userId);
-  }
-
-  private buildUserRO(user: UserEntity) {
-    const userRO = {
-      id: user.id,
-      login: user.login,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      version: user.version,
-    };
-
-    return userRO;
   }
 }
