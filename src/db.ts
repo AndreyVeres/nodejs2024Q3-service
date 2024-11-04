@@ -23,13 +23,13 @@ export const db: DB = {
     // },
   ],
   tracks: [
-    {
-      name: 'track1',
-      id: '19144c24-6ca7-49d3-a0b6-fb7e5e921932',
-      artistId: null,
-      duration: 100,
-      albumId: null,
-    },
+    // {
+    //   name: 'track1',
+    //   id: '19144c24-6ca7-49d3-a0b6-fb7e5e921932',
+    //   artistId: null,
+    //   duration: 100,
+    //   albumId: null,
+    // },
   ],
 
   artists: [

@@ -25,12 +25,11 @@ export class UserService {
     return newUser;
   }
 
-  async updatePassword(userId: string, dto: UpdatePasswordDto): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+  async updatePassword(id: string, dto: UpdatePasswordDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException('User not found');
     if (user.password !== dto.oldPassword) throw new ForbiddenException('invalid old password');
-
     if (user.password === dto.newPassword) {
       throw new BadRequestException('The new password must be different from the old one');
     }
@@ -44,15 +43,15 @@ export class UserService {
     return await this.userRepository.findOne({ where: { login } });
   }
 
-  async getById(userId: string) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+  async getById(id: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
 
     return this.buildUserRO(user);
   }
 
-  async delete(userId: string): Promise<DeleteResult> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+  async delete(id: string): Promise<DeleteResult> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
 
     return await this.userRepository.delete(user.id);

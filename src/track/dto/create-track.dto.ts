@@ -10,10 +10,8 @@ export class CreateTrackDto {
   readonly duration: number;
 
   @IsOptional()
-  @IsString()
-  readonly artistId: string | null = null;
+  readonly artistId: string | null;
 
   @IsOptional()
-  @IsString()
-  readonly albumId: string | null = null;
+  readonly albumId: string | null;
 }

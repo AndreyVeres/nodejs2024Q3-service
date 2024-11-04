@@ -1,11 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { db } from 'src/db';
 import { toPromise } from 'src/shared/utils/toPromise';
+import { FavoriteEntity } from './favorites.entity';
+import { Repository } from 'typeorm';
+import { TrackEntity } from 'src/track/track.entity';
 
 @Injectable()
 export class FavoriteService {
+  constructor(
+    // @InjectRepository(FavoriteEntity) private readonly favoritesRepository: Repository<FavoriteEntity>,
+    // @InjectRepository(TrackEntity) private readonly trackRepository: Repository<TrackEntity>,
+  ) {}
+
   async getAll() {
-    return await toPromise(db.favs);
+    // return await toPromise(db.favs);
+
+    // return await this.favoritesRepository.find();
   }
 
   async addAlbum(id: string) {
@@ -15,6 +26,13 @@ export class FavoriteService {
 
   async addTrack(id: string) {
     await toPromise(db.favs.tracks.push(id));
+
+    // const track = await this.trackRepository.findOne({ where: { id } });
+
+    // if(!track) throw new NotFoundException('track not found');
+
+    // await this.favoritesRepository.insert()
+
     return;
   }
 

@@ -27,13 +27,14 @@ export class FavoriteController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAll() {
-    const { tracks, albums, artists } = await this.favoriteService.getAll();
+    // const { tracks, albums, artists } = await this.favoriteService.getAll();
 
-    return {
-      albums: await Promise.all(albums.map((albumId) => this.albumService.getById(albumId))),
-      tracks: await Promise.all(tracks.map((trackId) => this.trackService.getById(trackId))),
-      artists: await Promise.all(artists.map((artistId) => this.artistService.getById(artistId))),
-    };
+    return await this.favoriteService.getAll();
+    // return {
+    //   albums: await Promise.all(albums.map((albumId) => this.albumService.getById(albumId))),
+    //   tracks: await Promise.all(tracks.map((trackId) => this.trackService.getById(trackId))),
+    //   artists: await Promise.all(artists.map((artistId) => this.artistService.getById(artistId))),
+    // };
   }
 
   @Post('track/:id')
