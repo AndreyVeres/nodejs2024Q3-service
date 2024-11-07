@@ -4,11 +4,12 @@ import { AlbumService } from './album.service';
 import { TrackService } from 'src/track/track.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TrackEntity } from 'src/track/track.entity';
+import { AlbumEntity } from './album.entity';
 
 @Module({
   controllers: [AlbumController],
   providers: [AlbumService, TrackService],
   exports: [AlbumService],
-  imports: [TypeOrmModule.forFeature([TrackEntity])],
+  imports: [TypeOrmModule.forFeature([AlbumEntity, TrackEntity])],
 })
 export class AlbumModule {}

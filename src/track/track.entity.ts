@@ -1,9 +1,10 @@
 import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
-import { FavoriteEntity } from 'src/favorites/favorites.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { AlbumEntity } from 'src/album/album.entity';
+import { ArtistEntity } from 'src/artist/artist.entity';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('track')
-export class TrackEntity {
+export class TrackEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -23,6 +24,9 @@ export class TrackEntity {
   @IsNumber()
   duration: number;
 
-  // @ManyToMany(() => FavoriteEntity, (favorite) => favorite.tracks)
-  // favorites: FavoriteEntity[];
+  @ManyToOne(() => AlbumEntity, (album) => album.id, { onDelete: 'SET NULL' })
+  album?: AlbumEntity;
+
+  @ManyToOne(() => ArtistEntity, (artist) => artist.id, { onDelete: 'SET NULL' })
+  artist?: ArtistEntity;
 }

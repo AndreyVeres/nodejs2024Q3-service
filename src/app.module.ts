@@ -9,6 +9,10 @@ import { FavoriteModule } from './favorites/favorites.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user/user.entity';
+import { TrackEntity } from './track/track.entity';
+import { AlbumEntity } from './album/album.entity';
+import { ArtistEntity } from './artist/artist.entity';
+import { FavoriteEntity } from './favorites/favorites.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,7 +28,7 @@ import { UserEntity } from './user/user.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [UserEntity],
+      entities: [UserEntity, TrackEntity, AlbumEntity, ArtistEntity, FavoriteEntity],
       synchronize: true,
       autoLoadEntities: true,
     }),

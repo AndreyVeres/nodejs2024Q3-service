@@ -1,55 +1,39 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { db } from 'src/db';
-import { toPromise } from 'src/shared/utils/toPromise';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { ArtistEntity } from './artist.entity';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
+  constructor(@InjectRepository(ArtistEntity) private readonly artistRepository: Repository<ArtistEntity>) {}
+
   async getAll() {
-    return await toPromise(db.artists);
+    return await this.artistRepository.find();
   }
 
   async getById(id: string) {
-    const artist = await toPromise(db.artists.find((artist) => artist.id === id));
-
+    const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) throw new NotFoundException('Artist not found');
 
     return artist;
   }
 
   async create(dto: CreateArtistDto) {
-    const artist = new ArtistEntity();
-
-    artist.grammy = dto.grammy;
-    artist.name = dto.name;
-
-    db.artists.push(artist);
-
-    return artist;
+    const artist = this.artistRepository.create(dto);
+    return this.artistRepository.save(artist);
   }
 
   async update(id: string, dto: UpdateArtistDto) {
     const artist = await this.getById(id);
-
-    if (!artist) throw new NotFoundException('Artist not found');
-
     const updated = Object.assign(artist, dto);
 
-    return updated;
+    return await this.artistRepository.save(updated);
   }
 
   async delete(id: string) {
     const artist = await this.getById(id);
-
-    if (!artist) throw new NotFoundException('Artist not found');
-
-    db.artists = db.artists.filter((artist) => artist.id !== id);
-    db.favs.artists = db.favs.artists.filter((artistId) => artistId !== id);
-  }
-
-  async checkArtistIsExist(id: string) {
-    return await toPromise(!!db.artists.find((artist) => artist.id === id));
+    return await this.artistRepository.remove(artist);
   }
 }
