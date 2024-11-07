@@ -24,7 +24,7 @@ export class FavoriteService implements OnModuleInit {
   }
 
   async findAll() {
-    const favorites = await this.favoritesRepository.findOne({
+    const { albums, tracks, artists } = await this.favoritesRepository.findOne({
       where: { id: 1 },
       relations: {
         artists: true,
@@ -33,9 +33,9 @@ export class FavoriteService implements OnModuleInit {
       },
     });
     return {
-      albums: favorites.albums,
-      tracks: favorites.tracks,
-      artists: favorites.artists,
+      albums,
+      tracks,
+      artists,
     };
   }
 
@@ -68,9 +68,6 @@ export class FavoriteService implements OnModuleInit {
       relations: { [`${entityName}s`]: true },
     });
 
-    if (!favorites) {
-      throw new UnprocessableEntityException('FAVS not found');
-    }
     favorites[`${entityName}s`] = favorites[`${entityName}s`].filter((item) => item.id !== id);
 
     return await this.favoritesRepository.save(favorites);
