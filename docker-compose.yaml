@@ -10,7 +10,7 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - '${PORT_POSTGRES}:${PORT_POSTGRES}'
+      - '5432:5432'
 
   app:
     build:
@@ -20,7 +20,7 @@ services:
     environment:
       - PORT=${PORT}
     ports:
-      - '${PORT}:${PORT}'
+      - '4000:4000'
     depends_on:
       - db
     volumes:
@@ -37,6 +37,3 @@ services:
       - '5050:80'
     depends_on:
       - db
-
-volumes:
-  pgdata:
