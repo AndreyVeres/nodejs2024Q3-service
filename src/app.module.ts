@@ -8,14 +8,7 @@ import { AlbumModule } from './album/album.module';
 import { FavoriteModule } from './favorites/favorites.module';
 import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    UserModule,
-    TrackModule,
-    ArtistModule,
-    AlbumModule,
-    FavoriteModule,
-  ],
+  imports: [ConfigModule.forRoot(), UserModule, TrackModule, ArtistModule, AlbumModule, FavoriteModule],
   controllers: [AppController],
   providers: [AppService],
 })
