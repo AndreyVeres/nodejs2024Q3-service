@@ -8,7 +8,7 @@ import { toPromise } from 'src/shared/utils/toPromise';
 @Injectable()
 export class UserService {
   getAll(): Promise<UserEntity[]> {
-    return toPromise<UserEntity[]>(db.users);
+    return toPromise<UserEntity[]>(db.users.map(this.buildUserRO));
   }
 
   async create(userData: CreateUserDto) {
@@ -19,6 +19,7 @@ export class UserService {
 
     db.users.push(user);
 
+    console.log(db.users);
     return this.buildUserRO(user);
   }
 
@@ -63,7 +64,7 @@ export class UserService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       version: user.version,
-    };
+    } as UserEntity;
 
     return userRO;
   }
